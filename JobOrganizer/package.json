@@ -25,6 +25,7 @@
     "sass",
     "css module"
   ],
+  "proxy": "http: //localhost:",
   "author": "Your Name Here",
   "license": "MIT",
   "bugs": {

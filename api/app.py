@@ -32,7 +32,7 @@ class Job(db.Model):
   location = db.Column(db.String(50)
 
 
-  def __init__(self, title, job_description, Company_name, Location):
+  def __init__(self, title, job_description, Company, Location):
     self.title = title
     self.job_description = job_description
     self.Company_name = company_name
@@ -40,7 +40,7 @@ class Job(db.Model):
 
 class Schema(ma.Schema):
   class Meta:
-    fields = ("id", "title", "Job description" "Company name", "Location")
+    fields = ("id", "title", "salary" "Company", "Location")
 
 job_schema = JobSchema()
 jobs_schema = Schema(many=True)
@@ -52,32 +52,35 @@ def home():
 # GET
 @app.route("/", methods=["GET"])
 def get_():
-  all_ = .query.all()
+  all_jobs = jobs.query.all()
   result = _schema.dump(all_)
   return jsonify(result)
 
   # Get one by the id
 
 @app.route("//<id>", methods=["GET"])
-def get_(id):
-   = .query.get(id)
+def get_job(id):
+   get_job = job.query.get(id)
 
-  result = _schema.dump()
+  result = job_schema.dump()
   return jsonify(result)
 
 
 # POST
-@app.route("/", methods=["POST"])
-def add_():
+@app.route("/add-job", methods=["POST"])
+def add_job():
   title = request.json["title"]
-  done = request.json["done"]
+  job_description = request.json["job_description"]
+  company = request.json["company"]
+  location = request.json["location"]
 
-  new_ = (title, done)
 
-  db.session.add(new_)
+  new_job = (title, job_description, Company, Location )
+
+  db.session.add(new_job)
   db.session.commit()
 
-   = .query.get(new_todo.id)
+   = .query.get(new_.id)
   return _schema.jsonify()
 
 
@@ -85,22 +88,22 @@ def add_():
 # PUT / PATCH
 
 @app.route("//<id>", methods=["PATCH"])
-def update_todo(id):
-   = .query.get(id)
+def update_job(id):
+   update_job= job.query.get(id)
 
-  new_done = request.json["done"]
+  modified_job = request.json["updated job"]
 
-  .done = new_done
+  . = modified_job
 
   db.session.commit()
 
-  return _schema.jsonify(todo)
+  return _schema.jsonify()
 
 
 # DELETE
 
-@app.route("//<id>", methods=["DELETE"])
-def remove_todo(id):
+@app.route("/delete/<id>", methods=["DELETE"])
+def remove_job(id):
   record = .query.get(id)
   db.session.delete(record)
   db.session.commit()
