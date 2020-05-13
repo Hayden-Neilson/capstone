@@ -1,0 +1,18 @@
+@media (max-width: 615px) {
+  // nav container
+  .nav-container {
+    flex-direction: column;
+    height: 100%;
+
+    .nav-link-wrapper {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
+
+    .footer {
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+}

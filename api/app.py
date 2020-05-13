@@ -10,6 +10,8 @@ app = Flask(__name__)
 CORS(app)
 heroku = Heroku(app)
 
+
+
 ENV = 'dev'
 if ENV =='dev':
   app.debug = True
@@ -32,82 +34,65 @@ class Job(db.Model):
 
 
 
-#   def __init__(self, , salary, company ):  
-#     self.salary = salary
-#     self.company = company
+  def __init__(self, salary, company ):  
+    self.salary = salary
+    self.company = company
 
 
-# class Schema(ma.Schema):
-#   class Meta:
-#     fields = ("id",  "salary" "Company",)
+class JobSchema(ma.Schema):
+  class Meta:
+    fields = ("id", "job",  "salary", "company")
 
-# job_schema = JobSchema()
-# jobs_schema = Schema(many=True)
+job_schema = JobSchema()
+jobs_schema = JobSchema(many=True)
 
-# @app.route("/", methods=["GET"])
-# def home():
-#   return "<h1>Capstone API</h1>"
+@app.route("/", methods=["GET"])
+def home():
+  return "<h1>Capstone API</h1>"
 
-# # GET
-# @app.route("/", methods=["GET"])
-# def get_():
-#   all_jobs = jobs.query.all()
-#   result = _schema.dump(all_)
-#   return jsonify(result)
+# GET
+@app.route("/all_job", methods=["GET"])
+def all_jobs():
+  all_jobs = job.query.all()
+  result = jobs_schema.dump(all_jobs)
+  return jsonify(result)
 
-#   # Get one by the id
+  # Get one by the id
 
-# @app.route("//<id>", methods=["GET"])
-# def get_job(id):
-#    get_job = job.query.get(id)
+@app.route("/get_job/<id>", methods=["GET"])
+def get_job(id):
+   get_job = job.query.get(id)
 
-#   result = job_schema.dump()
-#   return jsonify(result)
-
-
-# # POST
-# @app.route("/add-job", methods=["POST"])
-# def add_job():
-
-#   salary = request.json["salary"]
-#   company = request.json["company"]
+   result = job_schema.dump(get_job)
+   return jsonify(result)
 
 
+# POST
+@app.route("/add-job", methods=["POST"])
+def add_job():
+  job = request.json["job"]
+  salary = request.json["salary"]
+  company = request.json["company"]
 
-#   new_job = (title, salary, company, Location )
+  new_job = (job, salary, company )
 
-#   db.session.add(new_job)
-#   db.session.commit()
+  db.session.add(new_job)
+  db.session.commit()
 
-#    = .query.get(new_.id)
-#   return _schema.jsonify()
+  job = Job.query.get(new_.id)
+  return _schema.jsonify()
 
 
 
-# # PUT / PATCH
+# DELETE
 
-# @app.route("//<id>", methods=["PATCH"])
-# def update_job(id):
-#    update_job= job.query.get(id)
+@app.route("/delete/<id>", methods=["DELETE"])
+def remove_job(id):
+  record = Job.query.get(id)
+  db.session.delete(record)
+  db.session.commit()
 
-#   modified_job = request.json["updated job"]
-
-#   . = modified_job
-
-#   db.session.commit()
-
-#   return _schema.jsonify()
-
-
-# # DELETE
-
-# @app.route("/delete/<id>", methods=["DELETE"])
-# def remove_job(id):
-#   record = .query.get(id)
-#   db.session.delete(record)
-#   db.session.commit()
-
-#   return jsonify("delete that ish")
+  return jsonify("delete that ish")
 
 if __name__ == "__main__":
   app.run()

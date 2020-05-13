@@ -1,11 +1,20 @@
-.whatweare {
+.content-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  p {
-    display: flex;
+  .title {
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .center-column {
+    p {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
