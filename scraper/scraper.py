@@ -34,6 +34,9 @@ soup = BeautifulSoup(urllib.request.urlopen(URL).read(), 'lxml')
 
 results = soup.find_all('div', attrs={'data-tn-component': 'organicJob'})
 
+job_val = ''
+company_val = ''
+salary_val = ''
 
 
 for suggestion in results:
@@ -42,25 +45,24 @@ for suggestion in results:
     job = suggestion.find('a', attrs={'data-tn-element': "jobTitle"})
     if job:
         print('job:', job.text.strip())
+        job_val = job.text.strip()
 
     company = suggestion.find('span', attrs={"class":"company"})
     if company:
-        print('company:', company.text.strip() )
+        print('company:', company.text.strip())
+        company_val = company.text.strip()
 
     salary = suggestion.find('span',attrs={"class":"salaryText"})
     if salary:
         print("salaryText:", salary.text.strip())
+        salary_val = salary.text.strip() 
 
-    location = suggestion.find(attrs={'span':"location accessible-contrast-color-location"})
-    if location:
-        print("location:", location.text.strip())
+
+    cur.execute("""INSERT INTO scraped_info (job, company, salary) VALUES('{}', '{}', '{}' );""".format(job_val, company_val, salary_val  )),
+    # cur.fetchall()
+    conn.commit()
         
-
-
-
-        cur.execute("""INSERT INTO scraped_info (job, company, salary, location) VALUES('{}', '{}', '{}', '{}');""".format(job.text.strip(),(company.text.strip(), (salary.text.strip(), (location.text.strip() )),
-
-        conn.commit()
-        cur.close()
+    
+cur.close()
 
 conn.close()
