@@ -59,7 +59,7 @@ for suggestion in results:
 
 
     cur.execute("""INSERT INTO scraped_info (job, company, salary) VALUES('{}', '{}', '{}' );""".format(job_val, company_val, salary_val  )),
-    # cur.fetchall()
+   
     conn.commit()
         
     

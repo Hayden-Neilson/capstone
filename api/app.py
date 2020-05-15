@@ -4,18 +4,35 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from flask_heroku import Heroku
 from environs import Env
+import psycopg2
+import json
 import os
 
 app = Flask(__name__)
 CORS(app)
 heroku = Heroku(app)
 
+conn = psycopg2.connect(
+            dbname = "Capstone",
+            user = "postgres",
+            password = "Hneilson1",
+            host = "localhost",
+            port = "5432"
+)
 
+S = "SELECT job, company, salary FROM scraped_info"
+
+cur = conn.cursor()
+res = cur.execute(S)
+list_info = cur.fetchall()
+print(S)
 
 ENV = 'dev'
 if ENV =='dev':
   app.debug = True
-  app.config["SQLALCHEMY_DATABASE_URI"] = "http://127.0.0.1:5000/postgresql:/postgres:Hneilson1@localhost/Capstone"
+  app.config["SQLALCHEMY_DATABASE_URI"] = conn
+  print("DB connected")
+  # app.config["SQLALCHEMY_DATABASE_URI"] = "http://127.0.0.1:5432/postgresql:/postgres:Hneilson1@localhost/Capstone"
 else:
   app.debug = False
   app.config['SQLALCHEMY_DATABASE_URI'] = ''
@@ -48,14 +65,19 @@ jobs_schema = JobSchema(many=True)
 
 @app.route("/", methods=["GET"])
 def home():
+  print(S)
   return "<h1>Capstone API</h1>"
+  (S)
 
 # GET
 @app.route("/all_job", methods=["GET"])
 def all_jobs():
-  all_jobs = job.query.all()
-  result = jobs_schema.dump(all_jobs)
-  return jsonify(result)
+  # all_jobs = jobs_schema.query.all()
+  # result = jobs_schema.dump(all_jobs)
+
+  
+  print("hello")
+  return json.dumps(res)
 
   # Get one by the id
 
@@ -93,6 +115,8 @@ def remove_job(id):
   db.session.commit()
 
   return jsonify("delete that ish")
+
+
 
 if __name__ == "__main__":
   app.run()
